@@ -4,33 +4,32 @@ import { signupModel } from "../Schema/userData.js";
 
 
 export const login = async (request, response) => {
-  const data = await signupModel.findOne({ userEmail: request.body.mail });
-  // .then( (err, user) => {
-    try{
-      if (data) {
 
-        if(data.userPassword == request.body.pass)
-        {
-          response.send("ok");
-        }
-        else{
-          response.send("not matched");
-        }
-        // response.status(200).send("already exsist!");
+  try {
+    const {mail,pass}  = request.body
+    if (!mail || !pass) {
+      response.send("enter all details");
+      return;
+    }
+
+
+    const user = await signupModel.findOne({ userEmail: request.body.mail });
+
+    if (user) {
+      if (user.userPassword === pass) {
+        response.status(200).send("ok");
       }
       else {
-        response.status(400).send("no data");
+        response.send("password not matched");
       }
-
     }
-    catch(err)
-    {
-      response.send(err);
+    else {
+      response.send("no user found");
     }
-      
-    
-  // })
-
+  }
+  catch (err) {
+    response.send(err)
+  }
 
 
 }
