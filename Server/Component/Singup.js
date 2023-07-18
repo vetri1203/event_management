@@ -8,7 +8,7 @@ export const signup = async (request, response) => {
 
     
         if (user) {
-            response.send("User already exists");
+            response.status(400).send({message:"User already exists"});
         }
         else {
             if(!(request.body.mail
@@ -17,7 +17,7 @@ export const signup = async (request, response) => {
                 && request.body.lname
                 && request.body.phone))
                 {
-                    response.status(400).send("enter all details");
+                    response.status(400).send({message:"enter all details"});
                 }
                 else{
                     const data =await new signupModel({
@@ -31,10 +31,10 @@ export const signup = async (request, response) => {
                     console.log(data);
                     try{
                     await data.save();
-                        response.send("User registered successfully")
+                        response.status(200).send({message:"User registered successfully"})
                     }
                     catch(err){
-                        response.send(err);
+                        response.status(500).send({message :err});
                     }
 
                 }
@@ -43,7 +43,7 @@ export const signup = async (request, response) => {
         }
     }
     catch (err) {
-        response.send(err);
+        response.status(500).send({message :err});
 
     }
 }

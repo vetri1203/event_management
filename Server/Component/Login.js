@@ -8,7 +8,7 @@ export const login = async (request, response) => {
   try {
     const {mail,pass}  = request.body
     if (!mail || !pass) {
-      response.send("enter all details");
+      response.status(400).send({message:"enter all details"});
       return;
     }
 
@@ -17,19 +17,18 @@ export const login = async (request, response) => {
 
     if (user) {
       if (user.userPassword === pass) {
-        response.status(200).send("ok");
+        response.status(200).send({message:"ok"});
       }
       else {
-        response.send("password not matched");
+        response.status(400).send({message:"password not matched"});
       }
     }
     else {
-      response.send("no user found");
+      response.status(400).send({message:"no user found"});
     }
   }
   catch (err) {
-    response.send(err)
+    response.status(500).send({message:err})
   }
-
 
 }
