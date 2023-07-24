@@ -1,34 +1,25 @@
-
 import { signupModel } from "../Schema/userData.js";
-// import bcrypt from "bcrypt";
-
 
 export const login = async (request, response) => {
-
   try {
-    const {mail,pass}  = request.body
-    if (!mail || !pass) {
-      response.status(400).send({message:"enter all details"});
+    const {email, passwoord } = request.body; 
+    if (email || !passwoord) {
+      response.status(400).send({ message: "Enter all details" });
       return;
     }
 
-
-    const user = await signupModel.findOne({ userEmail: request.body.mail });
+    const user = await signupModel.findOne({ userEmail: email });
 
     if (user) {
-      if (user.userPassword === pass) {
-        response.status(200).send({message:"ok"});
+      if (user.userPassword === passwoord) {
+        response.status(200).send({ message: "Login successful" });
+      } else {
+        response.status(400).send({ message: "Password not matched" });
       }
-      else {
-        response.status(400).send({message:"password not matched"});
-      }
+    } else {
+      response.status(400).send({ message: "No user found" });
     }
-    else {
-      response.status(400).send({message:"no user found"});
-    }
+  } catch (err) {
+    response.status(500).send({ message: err.message });
   }
-  catch (err) {
-    response.status(500).send({message:err})
-  }
-
-}
+};
